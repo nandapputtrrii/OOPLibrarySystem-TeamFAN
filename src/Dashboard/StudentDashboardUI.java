@@ -13,9 +13,15 @@ import javafx.stage.Stage;
 import java.sql.*;
 import Database.DatabaseConnection;
 import Model.Member;
+import MenuMHS.Borrow; // Import Borrow class
 
 public class StudentDashboardUI extends Application {
     public Member member;
+
+    // Constructor to accept member data
+    public StudentDashboardUI(Member member) {
+        this.member = member;
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -49,6 +55,20 @@ public class StudentDashboardUI extends Application {
             btn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-border-width: 0 0 1 0; -fx-border-color: #bcd2e8;");
             btn.setOnMouseEntered(e -> btn.setStyle("-fx-background-color: #a2c3de; -fx-text-fill: #2c3e50; -fx-font-size: 16px; -fx-border-width: 0 0 1 0; -fx-border-color: #bcd2e8;"));
             btn.setOnMouseExited(e -> btn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-border-width: 0 0 1 0; -fx-border-color: #bcd2e8;"));
+            
+            // Add event handler for Borrow Book button
+            if (m.equals("Borrow Book")) {
+                btn.setOnAction(e -> {
+                    Borrow borrowUI = new Borrow(member);
+                    try {
+                        borrowUI.start(new Stage());
+                        primaryStage.close(); // Close the current dashboard window
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            }
+
             menuBox.getChildren().add(btn);
         }
         sidebar.getChildren().addAll(logoBox, menuBox);
@@ -60,14 +80,33 @@ public class StudentDashboardUI extends Application {
         header.setPrefHeight(60);
         Region headerSpacer = new Region();
         HBox.setHgrow(headerSpacer, Priority.ALWAYS);
-        Label accountLabel = new Label("Account");
+        
+        // Ganti label "Account" dengan nama depan
+        String accountName = "Account"; // Default value
+        if (member != null && member.nama != null) {
+            String[] nameParts = member.nama.split(" ");
+            if (nameParts.length > 0) {
+                accountName = nameParts[0]; // Ambil nama depan
+            }
+        }
+        
+        Label accountLabel = new Label(accountName);
         accountLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
         accountLabel.setTextFill(Color.web("#888"));
+        
         // Icon account (bulat, hanya lingkaran abu-abu atau inisial)
         Circle accountCircle = new Circle(18, Color.LIGHTGRAY);
-        Label accountInitial = new Label("A"); // atau ambil inisial dari nama user jika mau
+        
+        // Ambil inisial dari nama pengguna
+        String accountInitialText = "A"; // Default inisial
+        if (member != null && member.nama != null && !member.nama.isEmpty()) {
+            accountInitialText = String.valueOf(member.nama.charAt(0)).toUpperCase(); // Ambil inisial
+        }
+        
+        Label accountInitial = new Label(accountInitialText);
         accountInitial.setFont(Font.font("Arial", FontWeight.BOLD, 16));
         accountInitial.setTextFill(Color.web("#888"));
+        
         StackPane accountPane = new StackPane(accountCircle, accountInitial);
         header.getChildren().addAll(headerSpacer, accountPane, new Label("  "), accountLabel);
 
