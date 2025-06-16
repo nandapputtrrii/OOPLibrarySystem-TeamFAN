@@ -14,6 +14,8 @@ import java.sql.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
+import Dashboard.StudentDashboardUI;
+import Model.Member;
 
 public class UMMLoginUI extends Application {
     private TextField nimField;
@@ -208,16 +210,33 @@ public class UMMLoginUI extends Application {
             masukBtn.setDisable(false);
             
             if (loginTask.getValue()) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Success");
-                alert.setHeaderText("Login Successful");
-                alert.setContentText("Welcome to UMM Library!");
-                alert.showAndWait();
-                
-                // TODO: Open main application window
-                // For now, just clear the fields
-                nimField.clear();
-                passField.clear();
+                try {
+                    Connection conn = DatabaseConnection.getConnection();
+                    String query = "SELECT * FROM member WHERE (nim = ? OR email = ?) AND password = ?";
+                    PreparedStatement pstmt = conn.prepareStatement(query);
+                    pstmt.setString(1, nimField.getText());
+                    pstmt.setString(2, nimField.getText());
+                    pstmt.setString(3, passField.getText());
+                    ResultSet rs = pstmt.executeQuery();
+                    if (rs.next()) {
+                        Member member = new Member(
+                            rs.getString("nama"),
+                            rs.getString("fakultas"),
+                            rs.getString("prodi"),
+                            rs.getString("no_hp"),
+                            rs.getString("email"),
+                            rs.getString("nim")
+                        );
+                        StudentDashboardUI dashboard = new StudentDashboardUI(member);
+                        dashboard.member = member; // set the member field directly
+                        dashboard.start(new Stage());
+                        ((Stage) masukBtn.getScene().getWindow()).close();
+                    }
+                    rs.close();
+                    pstmt.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
