@@ -275,20 +275,21 @@ public class UMMRegisterPanelUI extends Application {
         // Logo dan judul
         VBox header = new VBox(2);
         header.setAlignment(Pos.CENTER);
-        Label logo = new Label("L@ser");
-        logo.setFont(Font.font("Arial", FontWeight.BOLD, 15));
-        logo.setTextFill(Color.web("#3a4a6b"));
 
-        Label myumm = new Label("myUMM Library");
-        myumm.setFont(Font.font("Arial", FontWeight.BOLD, 22));
-        myumm.setTextFill(Color.web("#3a4a6b"));
+        // Replace the logo label with an ImageView
+        Image logoImage = new Image(getClass().getResourceAsStream("/laser.jpg"));
+        ImageView logoImageView = new ImageView(logoImage);
+        logoImageView.setFitWidth(100); // Set the desired width
+        logoImageView.setPreserveRatio(true); // Maintain aspect ratio
+
+        
 
         Label title = new Label("Registrasi Anggota\nPerpustakaan UMM");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 26));
         title.setTextFill(Color.web("#2a3a5a"));
         title.setTextAlignment(TextAlignment.CENTER);
 
-        header.getChildren().addAll(logo, myumm, title);
+        header.getChildren().addAll(logoImageView, title);
 
         // Toggle Login/Register
         HBox toggleBox = new HBox(10);
