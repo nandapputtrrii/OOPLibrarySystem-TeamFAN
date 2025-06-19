@@ -35,7 +35,7 @@
 <h2>Contributors</h2>
 <h4>Ani Seila Nanda Putri</h4>
 <p>- GitHub : <a href="https://github.com/nandapputtrrii" target="_blank">@nandapputtrrii</a></p>
-<p>- Email : <a href="mailto:nandappuuttrrii12@gmail.com">nandaputtri123@gmail.com</a></p>
+<p>- Email : <a href="mailto:nandappuuttrrii12@gmail.com">nandappuuttrrii12@gmail.com</a></p>
 
 <h4>Farel Faiza</h4>
 <p>- GitHub : <a href="https://github.com/farelfaiza446" target="_blank">@farelfaiza446</a></p>
