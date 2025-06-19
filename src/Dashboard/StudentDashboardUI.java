@@ -25,6 +25,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 
 public class StudentDashboardUI extends Application {
     public Member member;
@@ -955,12 +959,18 @@ public class StudentDashboardUI extends Application {
     private VBox createIndexPanel() {
         VBox indexPanel = new VBox(10);
         indexPanel.setAlignment(Pos.TOP_CENTER);
-        indexPanel.setPrefSize(220, 180);
+        indexPanel.setPrefSize(300, 300);
         indexPanel.setStyle("-fx-background-color: #f2f2f2; -fx-background-radius: 7; -fx-border-color: #cccccc; -fx-border-width: 1;");
+
         Label indexLabel = new Label("Index Peminjaman Buku");
-        indexLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
+        indexLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 16));
         indexLabel.setTextFill(Color.web("#b0b0b0"));
         indexPanel.getChildren().add(indexLabel);
+
+        // Create and add the borrow history chart
+        BarChart<String, Number> borrowHistoryChart = createBorrowHistoryChart();
+        indexPanel.getChildren().add(borrowHistoryChart);
+
         return indexPanel;
     }
     
@@ -1115,6 +1125,46 @@ public class StudentDashboardUI extends Application {
             // Format the ID
             return String.format("%sXX%03d", initials.toString(), sequenceNumber); // Format as Initials + XX + 001
         }
+    }
+
+    // Method to create a BarChart for borrow history
+    private BarChart<String, Number> createBorrowHistoryChart() {
+        // Create axes
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Jumlah Buku");
+        yAxis.setTickUnit(1); // Set tick unit to 1 to avoid decimals
+
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setLabel("Tanggal");
+
+        // Create the BarChart
+        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+        barChart.setTitle("Riwayat Peminjaman Buku");
+
+        // Fetch borrow history data
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Jumlah Peminjaman");
+
+        String query = "SELECT DATE(tanggal_peminjaman) AS borrow_date, COUNT(*) AS count " +
+                       "FROM peminjaman WHERE nim_peminjam = ? GROUP BY borrow_date ORDER BY borrow_date";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, member.nim);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String date = rs.getString("borrow_date");
+                int count = rs.getInt("count"); // Get the count as an integer
+                series.getData().add(new XYChart.Data<>(date, count)); // Add as integer
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Gagal memuat data peminjaman: " + e.getMessage());
+        }
+
+        barChart.getData().add(series);
+        return barChart;
     }
 }
 class TotalFine {
