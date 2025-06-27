@@ -16,12 +16,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import Dashboard.StudentDashboardUI;
 import Model.Member;
+import javafx.scene.text.FontPosture;
 
 public class UMMLoginUI extends Application {
     private TextField nimField;
     private PasswordField passField;
     private Button masukBtn;
-    private ProgressIndicator loadingIndicator;
 
     @Override
     public void start(Stage primaryStage) {
@@ -59,15 +59,14 @@ public class UMMLoginUI extends Application {
         VBox vbox = new VBox(18);
         vbox.setAlignment(Pos.CENTER);
 
-        // Logo dan judul
-        Label logo = new Label("L@ser\nmyUMM Library");
-        logo.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-        logo.setTextFill(Color.WHITE);
-        logo.setAlignment(Pos.CENTER);
-        logo.setTextAlignment(TextAlignment.CENTER);
+        // Replace the logo Label with an ImageView
+        Image logoImage = new Image(getClass().getResourceAsStream("/laser.jpg"));
+        ImageView logoImageView = new ImageView(logoImage);
+        logoImageView.setFitWidth(200); // Set the desired width
+        logoImageView.setPreserveRatio(true); // Maintain aspect ratio
 
-        Label title = new Label("Login Anggota\nPerpustakaan UMM");
-        title.setFont(Font.font("Arial", FontWeight.NORMAL, 22));
+        Label title = new Label("Login Anggota Perpustakaan");
+        title.setFont(Font.font("Segoe UI", FontWeight.BOLD, 24));
         title.setTextFill(Color.WHITE);
         title.setTextAlignment(TextAlignment.CENTER);
 
@@ -104,30 +103,24 @@ public class UMMLoginUI extends Application {
         nimField = new TextField();
         nimField.setPromptText("NIM/Email UMM");
         nimField.setMaxWidth(260);
-        nimField.setStyle("-fx-background-radius: 10; -fx-font-size: 15px;");
+        nimField.setStyle("-fx-background-radius: 10; -fx-font-size: 15px; -fx-font-family: 'Segoe UI';");
 
         // Field Password
         passField = new PasswordField();
         passField.setPromptText("Password");
         passField.setMaxWidth(260);
-        passField.setStyle("-fx-background-radius: 10; -fx-font-size: 15px;");
-
-        // Loading indicator
-        loadingIndicator = new ProgressIndicator();
-        loadingIndicator.setVisible(false);
-        loadingIndicator.setMaxSize(30, 30);
-        loadingIndicator.setStyle("-fx-progress-color: white;");
+        passField.setStyle("-fx-background-radius: 10; -fx-font-size: 15px; -fx-font-family: 'Segoe UI';");
 
         // Tombol Masuk
         masukBtn = new Button("Masuk");
         masukBtn.setPrefWidth(110);
-        masukBtn.setStyle("-fx-background-color: #d4d8e0; -fx-text-fill: #5a5a5a; -fx-background-radius: 10; -fx-font-size: 15px;");
+        masukBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 10; -fx-font-size: 15px; -fx-font-family: 'Segoe UI';");
         masukBtn.setOnAction(e -> handleLogin());
 
-        // Create HBox for button and loading indicator
+        // Create HBox for button
         HBox buttonBox = new HBox(10);
         buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.getChildren().addAll(loadingIndicator, masukBtn);
+        buttonBox.getChildren().addAll(masukBtn);
 
         // Use a GridPane for form fields and button for better alignment
         GridPane formGrid = new GridPane();
@@ -140,13 +133,13 @@ public class UMMLoginUI extends Application {
         GridPane.setHalignment(buttonBox, HPos.RIGHT);
 
         vbox.getChildren().clear();
-        vbox.getChildren().addAll(logo, title, toggleBox, formGrid);
+        vbox.getChildren().addAll(logoImageView, title, toggleBox, formGrid);
 
         borderPane.setCenter(vbox);
 
         // Footer alamat
         Label alamat = new Label("Jalan Raya Tlogomas No. 246, Jatimulyo, Lowokwaru, Malang, Jawa Timur, 65144");
-        alamat.setFont(Font.font("Arial", FontWeight.NORMAL, 11));
+        alamat.setFont(Font.font("Segoe UI", FontPosture.ITALIC, 11));
         alamat.setTextFill(Color.WHITE);
         alamat.setAlignment(Pos.CENTER);
 
@@ -172,10 +165,6 @@ public class UMMLoginUI extends Application {
             alert.showAndWait();
             return;
         }
-
-        // Show loading indicator and disable button
-        loadingIndicator.setVisible(true);
-        masukBtn.setDisable(true);
 
         // Create a background task for login
         Task<Boolean> loginTask = new Task<Boolean>() {
@@ -206,9 +195,6 @@ public class UMMLoginUI extends Application {
 
         // Handle task completion
         loginTask.setOnSucceeded(e -> {
-            loadingIndicator.setVisible(false);
-            masukBtn.setDisable(false);
-            
             if (loginTask.getValue()) {
                 try {
                     Connection conn = DatabaseConnection.getConnection();
@@ -247,9 +233,6 @@ public class UMMLoginUI extends Application {
         });
 
         loginTask.setOnFailed(e -> {
-            loadingIndicator.setVisible(false);
-            masukBtn.setDisable(false);
-            
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Login Failed");

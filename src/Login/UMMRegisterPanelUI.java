@@ -43,96 +43,96 @@ public class UMMRegisterPanelUI extends Application {
 
     private void initializeFakultasProdiMap() {
         fakultasProdiMap = new HashMap<>();
-
+        
         // FEB
         fakultasProdiMap.put("FEB", Arrays.asList(
-                "Manajemen",
-                "Akuntansi",
-                "Ekonomi Pembangunan"
+            "Manajemen",
+            "Akuntansi",
+            "Ekonomi Pembangunan"
         ));
-
+        
         // FISIP
         fakultasProdiMap.put("FISIP", Arrays.asList(
-                "Ilmu Komunikasi",
-                "Ilmu Pemerintahan",
-                "Hubungan Internasional",
-                "Kesejahteraan Sosial",
-                "Sosiologi"
+            "Ilmu Komunikasi",
+            "Ilmu Pemerintahan",
+            "Hubungan Internasional",
+            "Kesejahteraan Sosial",
+            "Sosiologi"
         ));
-
+        
         // FKIP
         fakultasProdiMap.put("FKIP", Arrays.asList(
-                "Pendidikan Matematika",
-                "Pendidikan Biologi",
-                "Pendidikan Bahasa Indonesia",
-                "Pendidikan Pancasila dan Kewarganegaraan",
-                "Pendidikan Bahasa Inggris",
-                "Pendidikan Guru Sekolah Dasar"
+            "Pendidikan Matematika",
+            "Pendidikan Biologi",
+            "Pendidikan Bahasa Indonesia",
+            "Pendidikan Pancasila dan Kewarganegaraan",
+            "Pendidikan Bahasa Inggris",
+            "Pendidikan Guru Sekolah Dasar"
         ));
-
+        
         // PSIKOLOGI
         fakultasProdiMap.put("FAKULTAS PSIKOLOGI", Arrays.asList("Psikologi"));
-
+        
         // FH
         fakultasProdiMap.put("FH", Arrays.asList("Ilmu Hukum"));
-
+        
         // FPP
         fakultasProdiMap.put("FPP", Arrays.asList(
-                "Agroteknologi/Agronomi",
-                "Agribisnis",
-                "Teknologi Pangan",
-                "Kehutanan",
-                "Peternakan",
-                "Akuakultur"
+            "Agroteknologi/Agronomi",
+            "Agribisnis",
+            "Teknologi Pangan",
+            "Kehutanan",
+            "Peternakan",
+            "Akuakultur"
         ));
-
+        
         // FT
         fakultasProdiMap.put("FT", Arrays.asList(
-                "Teknik Mesin",
-                "Teknik Sipil",
-                "Teknik Industri",
-                "Informatika",
-                "Teknik Elektro"
+            "Teknik Mesin",
+            "Teknik Sipil",
+            "Teknik Industri",
+            "Informatika",
+            "Teknik Elektro"
         ));
-
+        
         // FAI
         fakultasProdiMap.put("FAI", Arrays.asList(
-                "Pendidikan Agama Islam",
-                "Hukum Keluarga Islam Ahwal Syakhshiyyah",
-                "Ekonomi Syariah",
-                "Pendidikan Bahasa Arab"
+            "Pendidikan Agama Islam",
+            "Hukum Keluarga Islam Ahwal Syakhshiyyah",
+            "Ekonomi Syariah",
+            "Pendidikan Bahasa Arab"
         ));
-
+        
         // FIKES
         fakultasProdiMap.put("FIKES", Arrays.asList(
-                "Ilmu Keperawatan",
-                "Farmasi",
-                "Fisioterapi"
+            "Ilmu Keperawatan",
+            "Farmasi",
+            "Fisioterapi"
         ));
-
+        
         // FK
         fakultasProdiMap.put("FK", Arrays.asList(
-                "Kedokteran"
+            "Kedokteran"
         ));
-
+        
         // VOKASI
         fakultasProdiMap.put("VOKASI", Arrays.asList(
-                "D3 Ilmu Keperawatan",
-                "D3 Teknologi Elektronika",
-                "D3 Keuangan dan Perbankan",
-                "D3 Bisnis Properti",
-                "D3 Agribisnis Unggas"
+            "D3 Ilmu Keperawatan",
+            "D3 Teknologi Elektronika",
+            "D3 Keuangan dan Perbankan",
+            "D3 Bisnis Properti",
+            "D3 Agribisnis Unggas"
         ));
     }
 
     private void registerMember() {
         // Validate input fields
-        if (namaField.getText().isEmpty() || nimField.getText().isEmpty() ||
-                emailField.getText().isEmpty() || passwordField.getText().isEmpty() ||
-                confirmField.getText().isEmpty() || alamatField.getText().isEmpty() ||
-                nohpField.getText().isEmpty() || fakultasComboBox.getValue() == null ||
-                prodiComboBox.getValue() == null) {
-
+        if (namaField.getText().isEmpty() || nimField.getText().isEmpty() || 
+            emailField.getText().isEmpty() || passwordField.getText().isEmpty() || 
+            confirmField.getText().isEmpty() || alamatField.getText().isEmpty() || 
+            nohpField.getText().isEmpty() || fakultasComboBox.getValue() == null || 
+            prodiComboBox.getValue() == null) {
+            
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Registration Error");
@@ -164,8 +164,8 @@ public class UMMRegisterPanelUI extends Application {
                 try {
                     Connection conn = DatabaseConnection.getConnection();
                     String query = "INSERT INTO member (nama, alamat, no_hp, email, password, fakultas, prodi, nim) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
+                                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                    
                     PreparedStatement pstmt = conn.prepareStatement(query);
                     pstmt.setString(1, namaField.getText());
                     pstmt.setString(2, alamatField.getText());
@@ -177,7 +177,7 @@ public class UMMRegisterPanelUI extends Application {
                     pstmt.setString(8, nimField.getText());
 
                     int result = pstmt.executeUpdate();
-
+                    
                     Platform.runLater(() -> {
                         if (result > 0) {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -185,10 +185,10 @@ public class UMMRegisterPanelUI extends Application {
                             alert.setHeaderText("Registration Successful");
                             alert.setContentText("Your account has been created successfully!");
                             alert.showAndWait();
-
+                            
                             // Clear all fields
                             clearFields();
-
+                            
                             // Switch to login screen
                             UMMLoginUI loginUI = new UMMLoginUI();
                             try {
@@ -199,9 +199,9 @@ public class UMMRegisterPanelUI extends Application {
                             }
                         }
                     });
-
+                    
                     pstmt.close();
-
+                    
                 } catch (SQLException e) {
                     Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -275,21 +275,20 @@ public class UMMRegisterPanelUI extends Application {
         // Logo dan judul
         VBox header = new VBox(2);
         header.setAlignment(Pos.CENTER);
+        Label logo = new Label("L@ser");
+        logo.setFont(Font.font("Arial", FontWeight.BOLD, 15));
+        logo.setTextFill(Color.web("#3a4a6b"));
 
-        // Replace the logo label with an ImageView
-        Image logoImage = new Image(getClass().getResourceAsStream("/laser.jpg"));
-        ImageView logoImageView = new ImageView(logoImage);
-        logoImageView.setFitWidth(100); // Set the desired width
-        logoImageView.setPreserveRatio(true); // Maintain aspect ratio
-
-
+        Label myumm = new Label("myUMM Library");
+        myumm.setFont(Font.font("Arial", FontWeight.BOLD, 22));
+        myumm.setTextFill(Color.web("#3a4a6b"));
 
         Label title = new Label("Registrasi Anggota\nPerpustakaan UMM");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 26));
         title.setTextFill(Color.web("#2a3a5a"));
         title.setTextAlignment(TextAlignment.CENTER);
 
-        header.getChildren().addAll(logoImageView, title);
+        header.getChildren().addAll(logo, myumm, title);
 
         // Toggle Login/Register
         HBox toggleBox = new HBox(10);
